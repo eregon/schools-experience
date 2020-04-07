@@ -4,6 +4,7 @@ on:
   push:
     branches:    
       - master
+      - tweaks
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron:  '46 4 * * *'
@@ -13,9 +14,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rspecmode: [ latency, throughput ]
+        rspecmode: [
+          "--engine.Mode=latency",
+          "--engine.Mode=default",
+          "--call-with-block-always-clone=false --yield-always-clone=false",
+          "--engine.Splitting=false",
+          "--engine.Inlining=false",
+          "--engine.Splitting=false --engine.Inlining=false",
+        ]
         appmode: [ latency ]
     runs-on: ubuntu-latest
+    name: ${{matrix.rspecmode}}
     steps:
     - uses: actions/checkout@v2
     - name: build docker image
@@ -69,7 +78,7 @@ jobs:
       continue-on-error: true
       run: |
         docker-compose run \
-           -e RUBYOPT='--experimental-options --engine.Mode=${{matrix.rspecmode}} --ruby.call-with-block-always-clone=false --ruby.yield-always-clone=false' \
+           -e RUBYOPT='--experimental-options ${{matrix.rspecmode}}' \
            --no-deps \
            --rm db-tasks rspec --exclude-pattern **/presenters/schools/on_boarding/school_profile_presenter_spec.rb
     # - name: run a spec with profiling (histogram)
