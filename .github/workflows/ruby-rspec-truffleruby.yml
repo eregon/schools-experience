@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         rspecmode: [ latency, throughput ]
-        appmode: [ latency, throughput ]
+        appmode: [ latency ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
