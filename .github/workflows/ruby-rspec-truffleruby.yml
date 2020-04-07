@@ -21,6 +21,8 @@ jobs:
           "--engine.Splitting=false",
           "--engine.Inlining=false",
           "--engine.Splitting=false --engine.Inlining=false",
+          "--engine.LanguageAgnosticInlining",
+          "--engine.LanguageAgnosticInlining --engine.Splitting=false",
         ]
         appmode: [ latency ]
     runs-on: ubuntu-latest
